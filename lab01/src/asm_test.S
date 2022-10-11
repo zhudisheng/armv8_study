@@ -1,4 +1,4 @@
-
+#define MY_LABEL 0x20
 .global ldr_test
 ldr_test:
   //lab1. 测试ldr地址偏移模式
@@ -34,4 +34,9 @@ ldr_test:
   /*观察后变基的str,观察x2的值，地址0x500000的值*/
   mov x2, 0x500000
   str x6, [x2],#8
+
+  //lab4:观察ldr加载label
+  /*请观察 x6和x7的值*/
+  ldr x6, MY_LABEL
+  ldr x7, =MY_LABEL
   ret
