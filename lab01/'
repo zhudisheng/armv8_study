@@ -120,10 +120,6 @@ add_inst_test:
   当arg1 >= arg2时 返回0
   当arg1 < arg2时 返回0xffffffffffffffff
 */
-.global compare_and_return
-compare_and_return:
-  cmp x0, x1
-  sbc x0, xzr,xzr
-  ret
+
 
 
