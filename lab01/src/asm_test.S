@@ -143,3 +143,24 @@ ands_test:
   mrs x0, nzcv
   ret
 
+/*
+data_process_instr lab4: 测试位段bitfield指令
+*/
+
+.global bitfield_test
+bitfield_test:
+  /*位段插入*/
+  mov x1, 0x345
+  mov x0, 0
+  bfi x0, x1, 8,4
+
+  /* 无符号数的bitfield提取,提取x2,从第4个bit开始,提取8位
+    x3其他位都是0，最终:0xbc*/ 
+  ldr x2, =0x5678abcd
+  ubfx x3, x2, #4, #8
+
+  /*有符号数的bitfield提取,提取x2,从第4个bit开始,提取8bit,
+  x4的其他比特位都是f, 最终:0xffffffffffffffbc*/
+  sbfx x4, x2, #4, #8
+  ret
+
