@@ -6,6 +6,7 @@ void my_ldr_str_test(void)
 {
   ldr_test();
   my_memcpy_test();
+  memset(0x200004,0x55,102);
 }
 void kernel_main(void)
 {
