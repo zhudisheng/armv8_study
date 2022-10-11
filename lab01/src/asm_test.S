@@ -57,3 +57,43 @@ my_memcpy_test:
   b.cc 1b
   ret
 
+/*lab7: label access test*/
+#define my_label 0x30
+
+.global string1
+string1:
+       .string "Boot at EL"
+
+.align 3
+.global my_data
+my_data:
+       .word 0x44
+
+.align 3
+.global access_label_test
+access_label_test:
+  /*1.加载一个很大的数*/ 
+  ldr x1, =0xffff0000ffff0000
+
+  /*2.初始化寄存器的值,比特位操作*/
+  ldr x2, =(1<<0)|(1<<2)|(1<<20)|(1<<40)|(1<<55)
+
+  //这是错误的访问方式，mov指令只能访问16bit数据
+  //mov x2, (1<<0)|(1<<2)|(1<<20)|(1<<40)|(1<<55)
+
+  /*3.访问一个宏定义*/
+  ldr x0, =my_label /*把宏的值加载到x0寄存器*/
+  ldr x1, my_label /*PC值 +宏的值,然后加载这个地址的值到x1寄存器*/
+
+  /*4.访问一个字符串*/
+  ldr x0, string1 /*加载string1的ASCII码的值到x0,加载8个字节的数据*/
+  ldr x1, =string1 /*加载string1的地址到x1寄存器,若读取地址的值，可以得到string1的ascii*/
+
+  /*5. 访问一个data*/
+  ldr x0, my_data /*加载mydata的值到x0*/
+  ldr x1, =my_data /*加载mydata的地址到x1*/
+
+  ret
+
+
+
