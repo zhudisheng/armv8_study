@@ -3,6 +3,12 @@
 extern void ldr_test(void);
 extern void my_memcpy_test(void);
 extern void access_label_test(void);
+extern void add_inst_test(void);
+
+void my_data_process_inst(void)
+{
+  add_inst_test();
+}
 void my_ldr_str_test(void)
 {
   ldr_test();
@@ -17,6 +23,7 @@ void kernel_main(void)
 
   /*my test*/
   my_ldr_str_test();
+  my_data_process_inst();
   while(1) {
     uart_send(uart_recv());
   }
