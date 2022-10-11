@@ -40,3 +40,20 @@ ldr_test:
   ldr x6, MY_LABEL
   ldr x7, =MY_LABEL
   ret
+
+/*
+lab5:拷贝0x80000地址的内容到0x2000000地址，拷贝32字节
+*/
+.global my_memcpy_test
+my_memcpy_test:
+  mov x1, 0x80000 
+  mov x2, 0x200000
+  add x3, x1,32
+
+1:
+  ldr x4, [x1], #8
+  str x4, [x2], #8
+  cmp x1, x3
+  b.cc 1b
+  ret
+
