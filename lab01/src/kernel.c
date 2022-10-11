@@ -5,6 +5,7 @@ extern void my_memcpy_test(void);
 extern void access_label_test(void);
 extern void add_inst_test(void);
 extern unsigned long compare_and_return(unsigned long a,unsigned long b);
+extern void ands_test(void);
 
 void my_data_process_inst(void)
 {
@@ -13,6 +14,7 @@ void my_data_process_inst(void)
   add_inst_test();
   ret = compare_and_return(10,9);
   val = compare_and_return(9,10);
+  ands_test();
 }
 void my_ldr_str_test(void)
 {
