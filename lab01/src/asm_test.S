@@ -164,3 +164,12 @@ bitfield_test:
   sbfx x4, x2, #4, #8
   ret
 
+  /*lab5:使用ubfx指令来读取 寄存器的位域*/
+  mrs x1, ID_AA64ISAR0_EL1
+  /*读取atomic域的值:判断是否支持LSE指令*/
+  ubfx x0,x1,#20,#4
+  /*读取AES域的值:判断是否支持AES指令*/
+  ubfx x2, x1, #4, #4
+  ret
+
+
