@@ -229,3 +229,31 @@ bl_test:
   //恢复bl_test函数的返回地址，否则会跑飞
   mov x30, x6
   ret
+
+/*
+  other instr lab1: 测试adrp和ldr指令
+*/
+.align 3
+.global my_test_data
+my_test_data:
+  .dword 0x12345678abcdabcd
+
+.global adrp_test
+adrp_test:
+  /*使用adr来读取my_test_data的地址和值*/
+  adr x0, my_test_data
+
+  /*使用adrp指令来读取my_test_data的地址和值*/
+  adrp x1, my_test_data
+  add x1, x1, #:lo12:my_test_data
+  ldr x3, [x1]
+
+  
+  /*使用ldr指令来读取my_test_data地址和值*/
+  ldr x4, =my_test_data
+  ldr x5, my_test_data
+
+  /*分别使用adrp和ldr来加载位于4MB地址处的init_pg_dir*/
+  adrp x2, init_pg_dir
+  ldr x6, =init_pg_dir
+  ret

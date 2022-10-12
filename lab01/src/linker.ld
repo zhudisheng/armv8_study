@@ -9,4 +9,8 @@ SECTIONS
   bss_begin = .;
   .bss : {*(.bss*)}
   bss_end = .;
+
+  . = 0x400000,
+  init_pg_dir = .;
+  . += 4096;
 }
