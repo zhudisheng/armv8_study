@@ -1,8 +1,10 @@
+.section .data
 .align 3
 .global my_data
 my_data:
   .dword 0x0
 
+.section .text
 .global my_atomic_write
 my_atomic_write:
   adr x6, my_data
