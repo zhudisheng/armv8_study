@@ -9,6 +9,7 @@ extern void ands_test(void);
 extern void bitfield_test(void);
 extern void cmp_cmn_test(void);
 extern unsigned long csel_test(unsigned long r,unsigned long b);
+extern void bl_test(void);
 
 void my_data_process_inst(void)
 {
@@ -21,6 +22,7 @@ void my_data_process_inst(void)
   bitfield_test();
   cmp_cmn_test();
   val = csel_test(1,3);
+  bl_test();
 }
 void my_ldr_str_test(void)
 {

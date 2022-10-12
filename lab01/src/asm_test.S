@@ -210,6 +210,17 @@ csel_test:
   csel x0, x3, x2,eq
   ret
 
+/*
+compare_branch lab3: 测试bl指令
+*/
+.global bl_test
+bl_test:
+  mov x0, 1
+  mov x1, 3
+  bl csel_test
 
-
-
+  /*
+  小明同学写了上述汇编,发现执行bl_test函数的ret指令就跑飞了,
+  这是咋回事?
+  */
+  ret
