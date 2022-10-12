@@ -19,7 +19,7 @@ SRC_DIR = src
 all:benos.bin
 
 clean:
-	rm -rf $(BUILD_DIR) *.bin *.elf
+	rm -rf $(BUILD_DIR) *.bin *.elf *.map
 
 $(BUILD_DIR)/%_c.o:$(SRC_DIR)/%.c
 	mkdir -p $(@D)
@@ -37,7 +37,7 @@ DEP_FILES = $(OBJ_FILES:%.o=%.d)
 -include $(DEP_FILES)
 
 benos.bin: $(SRC_DIR)/linker.ld $(OBJ_FILES)
-	$(ARMGNU)-ld -T $(SRC_DIR)/linker.ld -o $(BUILD_DIR)/benos.elf $(OBJ_FILES)
+	$(ARMGNU)-ld -T $(SRC_DIR)/linker.ld -Map benos.map -o $(BUILD_DIR)/benos.elf $(OBJ_FILES)
 	$(ARMGNU)-objcopy $(BUILD_DIR)/benos.elf -O binary benos.bin
 	cp $(BUILD_DIR)/benos.elf benos.elf
 

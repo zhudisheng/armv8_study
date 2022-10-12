@@ -1,6 +1,6 @@
 SECTIONS
 {
-  . = 0x80000,
+  . = 0xffff000000080000,
   .text.boot : {*(.text.boot)}
   .text : {*(.text)}
   .rodata : {*(.rodata)}
@@ -10,7 +10,7 @@ SECTIONS
   .bss : {*(.bss*)}
   bss_end = .;
 
-  . = 0x400000,
+  . = ALIGN(4096);
   init_pg_dir = .;
   . += 4096;
 }
