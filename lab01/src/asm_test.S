@@ -199,4 +199,17 @@ cmp_cmn_test:
   b.cs 2b
   ret
 
+/*
+compare_branch lab2: 条件选择指令csel
+*/
+.global csel_test
+csel_test:
+  cmp x0, 0
+  sub x2, x1, 1
+  add x3, x1, 2
+  csel x0, x3, x2,eq
+  ret
+
+
+
 
