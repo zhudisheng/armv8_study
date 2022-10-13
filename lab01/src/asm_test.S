@@ -259,3 +259,26 @@ adrp_test:
   adrp x2, init_pg_dir
   ldr x6, =init_pg_dir
   ret
+
+/*
+汇编器 lab1: 使用汇编伪操作指令来实现一张表
+*/
+.align 3
+.global func_addr
+func_addr:
+  .quad 0x800800
+  .quad 0x800860
+  .quad 0x800880
+
+.align 3
+.global func_string
+func_string:
+  .asciz "func_a"
+  .asciz "func_b"
+  .asciz "func_c"
+
+.align 3
+.global func_num_syms
+func_num_syms:
+  .quad 3
+  

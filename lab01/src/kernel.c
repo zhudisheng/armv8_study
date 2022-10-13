@@ -31,6 +31,37 @@ void my_data_process_inst(void)
   val = my_atomic_write(0x345);
   atomic_set(0x11,&p1);
 }
+extern unsigned long func_addr[];
+extern unsigned long func_num_syms;
+extern char func_string[];
+
+static int print_func_name(unsigned long addr)
+{
+  int i;
+  char *p, *string;
+  for(i = 0;i < func_num_syms;i++) {
+    if(addr == func_addr[i])
+      goto found;
+  }
+  return 0;
+
+found:
+    p = &func_string;
+    while(1) {
+      p++;
+      if(*p == '\0')
+        i--;
+      if(i ==0 ) {
+        p++;
+        string = p;
+        uart_send_string(string);
+        break;
+      }
+    }
+    return 0;
+}
+
+
 void my_ldr_str_test(void)
 {
   ldr_test();
@@ -46,6 +77,8 @@ void kernel_main(void)
   /*my test*/
   my_ldr_str_test();
   my_data_process_inst();
+  /*汇编器lab1:查表*/
+  print_func_name(0x800880);
   while(1) {
     uart_send(uart_recv());
   }
