@@ -282,3 +282,42 @@ func_string:
 func_num_syms:
   .quad 3
   
+/*
+汇编器 lab2:宏的使用
+*/
+.macro add_func add, a, b
+  mov x0, \a
+  mov x1, \b
+  bl add_\()\add
+.endm
+
+.align 3
+.global add_1
+add_1:
+  add x0, x0, x1
+  add x0, x0,1
+  ret
+
+.global add_2
+add_2:
+  add x0, x0, x1
+  ret
+
+.global macro_test_1
+macro_test_1:
+  mov x9, x30
+
+  add_func 1, x0, x1
+
+  mov x30,x9
+  ret
+
+.global macro_test_2
+macro_test_2:
+  mov x9, x30
+
+  add_func 2, x0, x1
+
+  mov x30,x9
+  ret
+
