@@ -10,7 +10,7 @@ COPS += -DCONFIG_BOARD_PI4B
 QEMU_FLAGS += -machine raspi4
 endif
 
-COPS += -g -Wall -nostdlib -nostdinc -Iinclude
+COPS += -g -Wall -nostdlib -nostdinc -Iinclude -mgeneral-regs-only
 ASMOPS = -g -Iinclude
 
 BUILD_DIR = build
