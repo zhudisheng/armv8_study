@@ -75,7 +75,9 @@ void kernel_main(void)
 {
   unsigned long val = 0;
   uart_init();
-  uart_send_string("Welcome BenOS!\r\n");
+  init_printk_done();
+  //uart_send_string("Welcome BenOS!\r\n");
+  printk("printk init done!\n");
 
   /*my test*/
   my_ldr_str_test();
