@@ -19,6 +19,20 @@ proc_hang:
   b proc_hang
 
 master:
+  /*
+    假设代码段是在ROM中(LMA),而ROM的地址在0x90000
+    我们需要把代码段，从加载地址(LMA)拷贝到 运行地址(VMA)
+  */
+  adr x0, TEXT_ROM
+  adr x1,_text
+  adr x2,_etext
+
+1:
+  ldr x4, [x0], #8
+  str x4, [x1], #8
+  cmp x1, x2
+  b.cc 1b
+
   /*init uart and print the string*/
   bl __init_uart
   bl print_el
