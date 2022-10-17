@@ -18,8 +18,7 @@ SECTIONS
    *text代码段
    */
   _text = .;
-  /*.text : {*(.text)}*/
-  .text : AT(TEXT_ROM)
+  .text :
   {
     *(.text)
   }
@@ -29,8 +28,7 @@ SECTIONS
    *只读数据段
    */
   _rodata = .;
-  /*.rodata : {*(.rodata)}*/
-  .rodata : AT(ADDR(.rodata))
+  .rodata : 
   {
     *(.rodata) 
   }

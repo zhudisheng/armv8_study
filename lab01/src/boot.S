@@ -1,4 +1,5 @@
 #include "mm.h"
+#include "sysregs.h"
 
 .section .rodata
 .align 3
@@ -19,23 +20,37 @@ proc_hang:
   b proc_hang
 
 master:
-  /*
-    假设代码段是在ROM中(LMA),而ROM的地址在0x90000
-    我们需要把代码段，从加载地址(LMA)拷贝到 运行地址(VMA)
-  */
-  adr x0, TEXT_ROM
-  adr x1,_text
-  adr x2,_etext
-
-1:
-  ldr x4, [x0], #8
-  str x4, [x1], #8
-  cmp x1, x2
-  b.cc 1b
-
   /*init uart and print the string*/
   bl __init_uart
+
+  mrs x5, CurrentEL
+  cmp x5, #CurrentEL_EL3
+  b.eq el3_entry
+  b el2_entry
+
+el3_entry:
+  eret
+
+el2_entry:
   bl print_el
+  /*The Execution state for EL1 is AArch64*/
+  ldr x0, =HCR_HOST_NVHE_FLAGS
+  msr hcr_el2, x0
+
+  ldr x0, =SCTLR_VALUE_MMU_DISABLED
+  msr sctlr_el1, x0
+
+  ldr x0, =SPSR_EL1
+  msr spsr_el2, x0
+
+  adr x0, el1_entry
+  msr elr_el2, x0
+
+  eret
+
+el1_entry:
+  bl print_el
+
 
 
   adr x0, _bss
