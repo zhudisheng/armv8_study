@@ -136,6 +136,40 @@ static void my_memcpy_asm_test(unsigned long src, unsigned long dst, unsigned lo
 }
 #endif
 
+#define MY_OPS(ops,asm_ops) \
+static inline my_asm_##ops(unsigned long mask, void *p) \
+{                                                       \
+  unsigned long tmp;                                    \
+  asm volatile (                                        \
+        "ldr %1, [%0]\n"                                \
+        ""#asm_ops" %1, %1, %2\n"                       \
+        "str %1, [%0]\n"                                \
+        :"+r"(p),"+r"(tmp)                              \
+        :"r"(mask)                                      \
+        :"memory"                                       \
+      );                                                \
+}
+MY_OPS(or,orr)
+MY_OPS(and,and) 
+MY_OPS(andnot,bic)
+
+static void my_ops_test(void) 
+{
+  unsigned long p;
+  p = 0xf;
+  my_asm_and(0x2,&p);
+  printk("test and: p = 0x%x\n",p);
+
+  p = 0;
+  my_asm_or(0x3,&p);
+  printk("test or: p = 0x%x\n",p);
+
+  p = 0x3;
+  my_asm_andnot(0x2, &p);
+  printk("test andnot: p = 0x%x\n",p);
+}
+
+
 void kernel_main(void)
 {
   unsigned long val = 0;
@@ -153,6 +187,8 @@ void kernel_main(void)
   val = macro_test_2(5,5);
   print_mem();
   my_memcpy_asm_test(0x80000,0x100000,32);
+  /*内嵌汇编 lab4: 使用内嵌汇编与宏的结合*/
+  my_ops_test();
   while(1) {
     uart_send(uart_recv());
   }
