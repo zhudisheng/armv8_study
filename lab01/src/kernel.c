@@ -199,6 +199,25 @@ static void test_sysregs(void)
   printk("read vbar: 0x%x\n",read_sysreg(vbar_el1));
 }
 
+static int test_asm_goto(int a)
+{
+
+  asm goto (
+        "cmp %w0, 1\n"
+        "b.eq %l[label]\n"
+        :
+        :"r"(a)
+        :"memory"
+        :label
+      );
+  return 0;
+
+label:
+  printk("%s: a = %d\n",__func__,a);
+  return 0;
+
+}
+
 
 void kernel_main(void)
 {
@@ -222,6 +241,7 @@ void kernel_main(void)
 
   /*内嵌汇编 lab5: 实现读和写系统寄存器的宏*/
   test_sysregs();
+  test_asm_goto(1);
   
   while(1) {
     uart_send(uart_recv());
