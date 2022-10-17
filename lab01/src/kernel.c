@@ -97,6 +97,28 @@ static void print_mem(void)
       (unsigned long)_bss, (unsigned long)_ebss,
       (unsigned long)(_ebss - _bss));
 }
+
+/*
+ *内嵌汇编 lab1:实现简单的memcpy函数
+ * 
+ * 实现一个小的memcpy汇编函数
+ * 从0x80000地址拷贝32字节到0x100000地址处,并使用gdb来比较数据是否拷贝正确
+ */
+static void my_memcpy_asm_test(unsigned long src, unsigned long dst,unsigned long counter)
+{
+  unsigned long tmp;
+  unsigned long end = src + counter;
+
+  asm volatile (
+        "1: ldr %1, [%2], #8\n"
+        "str %1, [%0], #8\n"
+        "cmp %2, %3\n"
+        "b.cc 1b"
+        :"+r"(dst), "+r"(tmp),"+r"(src)
+        :"r"(end)
+        :"memory");
+}
+
 void kernel_main(void)
 {
   unsigned long val = 0;
@@ -113,6 +135,7 @@ void kernel_main(void)
   val = macro_test_1(5,5);
   val = macro_test_2(5,5);
   print_mem();
+  my_memcpy_asm_test(0x80000,0x100000,32);
   while(1) {
     uart_send(uart_recv());
   }
