@@ -195,8 +195,10 @@ static void test_sysregs(void)
   el = read_sysreg(CurrentEL);
   printk("el = %d\n", el >> 2);
 
-  write_sysreg(0x10000, vbar_el1);
-  printk("read vbar: 0x%x\n",read_sysreg(vbar_el1));
+  //write_sysreg(0x10000, vbar_el1);
+  //printk("read vbar: 0x%x\n",read_sysreg(vbar_el1));
+  //write_sysreg(0x10000,vbar_el2);
+  //printk("read vbar: 0x%x\n",read_sysreg(vbar_el2));
 }
 
 static int test_asm_goto(int a)
@@ -217,6 +219,17 @@ label:
   return 0;
 
 }
+static const char * const bad_mode_handler[] = {
+  "Sync Abort",
+  "IRQ",
+  "FIQ",
+  "SError"
+};
+void bad_mode(struct pt_regs *regs, int reason,unsigned int esr)
+{
+  printk("Bad mode for %s handler detected, far:0x%x\n",bad_mode_handler[reason],read_sysreg(far_el1),esr);
+}
+extern void trigger_alignment(void);
 
 
 void kernel_main(void)
@@ -242,6 +255,7 @@ void kernel_main(void)
   /*内嵌汇编 lab5: 实现读和写系统寄存器的宏*/
   test_sysregs();
   test_asm_goto(1);
+  trigger_alignment();
   
   while(1) {
     uart_send(uart_recv());
