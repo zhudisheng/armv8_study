@@ -104,6 +104,7 @@ static void print_mem(void)
  * 实现一个小的memcpy汇编函数
  * 从0x80000地址拷贝32字节到0x100000地址处,并使用gdb来比较数据是否拷贝正确
  */
+#if 0
 static void my_memcpy_asm_test(unsigned long src, unsigned long dst,unsigned long counter)
 {
   unsigned long tmp;
@@ -118,6 +119,22 @@ static void my_memcpy_asm_test(unsigned long src, unsigned long dst,unsigned lon
         :"r"(end)
         :"memory");
 }
+#else
+static void my_memcpy_asm_test(unsigned long src, unsigned long dst, unsigned long counter)
+{
+  unsigned long tmp;
+  unsigned long end = src + counter;
+
+  asm volatile (
+      "1: ldr %[tmp],[%[src]],#8\n"
+      "str %[tmp],[%[dst]],#8\n"
+      "cmp %[src],%[end]\n"
+      "b.cc 1b"
+      :[dst]"+r"(dst),[tmp]"+r"(tmp),[src]"+r"(src)
+      :[end]"r"(end)
+      :"memory");
+}
+#endif
 
 void kernel_main(void)
 {
