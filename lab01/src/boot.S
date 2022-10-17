@@ -23,8 +23,9 @@ master:
   bl __init_uart
   bl print_el
 
-  adr x0, bss_begin
-  adr x1, bss_end
+
+  adr x0, _bss
+  adr x1, _ebss 
   sub x1, x1, x0
   bl memzero
 

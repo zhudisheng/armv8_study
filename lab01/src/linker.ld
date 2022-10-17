@@ -9,20 +9,28 @@ SECTIONS
    * 这里是第一个段text.boot. 起始地质就是0x80000
    * 这个段存放了benos的第一条指令
    */
+  _text_boot = .;
   .text.boot : {*(.text.boot)}
+  _etext_boot = .;
 
   /*
    *text代码段
    */
+  _text = .;
   .text : {*(.text)}
+  _etext = .;
 
   /* 
    *只读数据段
    */
+  _rodata = .;
   .rodata : {*(.rodata)}
+  _erodata = .;
 
   /*数据段*/
+  _data = .;
   .data : {*(.data)}
+  _edata = .;
 
   /*
    *bss段
@@ -30,9 +38,9 @@ SECTIONS
    *bss_begin的起始地址以8字节对齐
    */
   . = ALIGN(0x8);
-  bss_begin = .;
+  _bss = .;
   .bss : {*(.bss*)}
-  bss_end = .;
+  _ebss = .;
 
   /*
    *分配一page的空间，用来存放页表
