@@ -153,8 +153,7 @@ MY_OPS(or,orr)
 MY_OPS(and,and) 
 MY_OPS(andnot,bic)
 
-static void my_ops_test(void) 
-{
+static void my_ops_test(void) {
   unsigned long p;
   p = 0xf;
   my_asm_and(0x2,&p);
@@ -167,6 +166,37 @@ static void my_ops_test(void)
   p = 0x3;
   my_asm_andnot(0x2, &p);
   printk("test andnot: p = 0x%x\n",p);
+}
+
+/*
+ * 在带参数的宏. #号作为一个预处理运算符,
+ * 可以把记号转换成字符
+ *
+ * 下面这句话会在预编译阶段变成:
+ * asm volatile("mrs %0," "reg":"=r" (_val)); _val; });
+ */
+
+#define read_sysreg(reg) ({ \
+    unsigned long _val; \
+    asm volatile ("mrs %0," #reg "" \
+        : "=r"(_val)); \
+        _val; \
+})
+
+#define write_sysreg(val, reg) ({ \
+  unsigned long _val =  (unsigned long)val; \
+  asm volatile("msr " #reg ", %x0" \ 
+      ::"rZ"(_val)); \
+})
+
+static void test_sysregs(void)
+{
+  unsigned long el;
+  el = read_sysreg(CurrentEL);
+  printk("el = %d\n", el >> 2);
+
+  write_sysreg(0x10000, vbar_el1);
+  printk("read vbar: 0x%x\n",read_sysreg(vbar_el1));
 }
 
 
@@ -189,6 +219,10 @@ void kernel_main(void)
   my_memcpy_asm_test(0x80000,0x100000,32);
   /*内嵌汇编 lab4: 使用内嵌汇编与宏的结合*/
   my_ops_test();
+
+  /*内嵌汇编 lab5: 实现读和写系统寄存器的宏*/
+  test_sysregs();
+  
   while(1) {
     uart_send(uart_recv());
   }
