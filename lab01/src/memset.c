@@ -9,6 +9,19 @@ static void *__memset_1bytes(void *s, int c,size_t count)
     *xs++ = c;
   return s;
 }
+static void __memset_1bytes_asm(void *p, unsigned long data, int count)
+{
+    int i = 0;
+    asm volatile (
+          "1: stp %3, %3, [%0], #16\n"
+          "add %w2,%w2,#16\n"
+          "cmp %w2,%w1\n"
+          "bne 1b"
+          :"+r"(p),"+r"(count),"+r"(i)
+          :"r"(data)
+          :"memory"
+        );
+}
 
 static void *__memset(char *s,int c,size_t count)
 {
@@ -37,7 +50,11 @@ static void *__memset(char *s,int c,size_t count)
     n = left / align;
     left = left % align;
 
+#if 0
     __memset_16bytes(p,data,16*n);
+#else
+    __memset_1bytes_asm(p,data,16*n);
+#endif
     if(left)
       __memset_1bytes(p + 16*n,c,left);
 
