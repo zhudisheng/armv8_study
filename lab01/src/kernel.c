@@ -1,4 +1,6 @@
 #include "uart.h"
+#include "esr.h"
+#include "irq.h"
 
 extern void ldr_test(void);
 extern void my_memcpy_test(void);
@@ -261,7 +263,11 @@ void kernel_main(void)
   /*内嵌汇编 lab5: 实现读和写系统寄存器的宏*/
   test_sysregs();
   test_asm_goto(1);
-  trigger_alignment();
+  //trigger_alignment();
+  printk("done\n");
+
+  timer_init();
+  raw_local_irq_enable();
   
   while(1) {
     uart_send(uart_recv());
